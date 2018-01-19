@@ -10,7 +10,7 @@ var express = require('express');
 var seedDB = require('./seeds');
 var app = express();
 
-mongoose.connect('mongodb://localhost/yelp_camp_v3', { useMongoClient: true });
+mongoose.connect('mongodb://localhost/yelp_camp_v3');
 mongoose.Promise = global.Promise;
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,6 +31,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 // =========================================
 // ROUTES
 // =========================================
@@ -45,7 +50,7 @@ app.get('/campgrounds', function (req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render('campgrounds/index', { campgrounds: allCampgrounds, currentUser: req.user });
+      res.render('campgrounds/index', { campgrounds: allCampgrounds });
     }
   });
 });
