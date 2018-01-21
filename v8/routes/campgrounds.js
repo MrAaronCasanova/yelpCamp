@@ -23,7 +23,7 @@ router.post('/', function (req, res) {
   var newCampground = { name: name, image: image, description: desc, };
 
   // Create a new campground and save to DB
-  Campground.create(newCampground, function (err, newlyCreated) {
+  Campground.create(newCampground, isLoggedIn, function (err, newlyCreated) {
     if (err) {
       console.log(err);
     } else {
@@ -36,7 +36,7 @@ router.post('/', function (req, res) {
 });
 
 // NEW - Show form to create new campground
-router.get('/new', function (req, res) {
+router.get('/new', isLoggedIn, function (req, res) {
   res.render('campgrounds/new');
 });
 
